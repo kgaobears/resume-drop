@@ -1,0 +1,23 @@
+{
+  "name": "resume-drop",
+  "version": "1.0.0",
+  "description": "Automatically drop a resume onto job hosting sites",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/qrosakee/resume-drop.git"
+  },
+  "author": "Kevin Gao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/qrosakee/resume-drop/issues"
+  },
+  "homepage": "https://github.com/qrosakee/resume-drop#readme",
+  "dependencies": {
+    "prompt": "^1.0.0",
+    "puppeteer": "^5.4.1"
+  }
+}
