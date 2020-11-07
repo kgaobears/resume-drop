@@ -40,62 +40,84 @@ await page.setViewport({ width: 1366, height: 768 });
 return page;
 }
 
-const goEasyApply = async () => {
 
+
+const goEasyApply = async () => {
+	const searchLabels = (document) => {var already = [];
+	var ar = Array.prototype.filter.call(document.querySelectorAll('div,span,label'), (el)=> {
+	if (already.includes(el.innerText)) return false;
+	already.push(el.innerText);
+	return el.innerText.endsWith('*')  && el.innerText.length < 200 && el.innerText.length > 2
+	})
+
+	return ar;
+	};
+
+	const bfs = (element) => {
+        var again = [];
+		const stack = [element];
+		while (stack.length > 0) {
+          var curr = stack.shift();
+            again.push(curr);
+          if (curr.tagName === "INPUT") {
+            return curr;
+          }
+          Array.from(curr.childNodes).forEach((el)=>{
+            if (el !== null && el !== undefined && !again.includes(el)) {
+console.log("new push:", el);
+            stack.push(el);
+            }
+          });
+            stack.push(curr.parentNode);
+            if (curr.nextSibling !== null && !again.includes(curr.nextSibling)) {
+            stack.push(curr.nextSibling);
+            }
+            if (curr.previousSibling !== null && !again.includes(curr.previousSibling)) {
+            stack.push(curr.previousSibling);
+            }
+		}
+	}
 
   let ar = document.querySelectorAll("li[class*=react-job-listing]")
   let arr = Array.prototype.filter.call(ar, (el) => el.innerText.contains("Easy Apply"));
   console.log('hi');
   let arrayTest = [];
 
-  arrayTest.push(arr[4]);
+  arrayTest.push(arr[1]);
 
   arrayTest.forEach(element => {
   	  	console.log(element.innerText)
   	element.click();
+
+  	  // close icon
+
+  document.querySelector("span[class*=closeIcon]").click();
+
+  // click easy apply
+  setTimeout(()=>{
+  		document.querySelector("button[class*=applyButton]").click();	
+  }, 5000);
+
+// search labels
+  setTimeout(()=>{
+	   const ar = searchLabels(document);
+	   console.log(ar);
+
+	   ar.forEach((el) => {
+	   	bfs(el).value = "test";
+	   })
+
+  }, 7000);
   });
-document.querySelector("span[class*=closeIcon]").click();
+
+
+
 }
 
 const pupp = async ()=> {
 const page = await setup();
 await page.evaluate(goEasyApply);
 //page.click("svg[class*=closeIcon]");
-
-
-page.evaluate(()=> {
-setTimeout(()=>{
-  			console.log("click");
-  			console.log("button here");
-  			console.log(document.querySelector("button[class*=applyButton]"));
-  			document.querySelector("button[class*=applyButton]").click();
- 	//page.click("button[class*=applyButton]");
- 	console.log("done"); 	
-  		}, 5000);
-}, );
-
-
-page.evaluate(() => {
-	const searchLabels = (document) => {var already = [];
-var ar = Array.prototype.filter.call(document.querySelectorAll('div,span,label'), (el)=> {
-if (already.includes(el.innerText)) return false;
-already.push(el.innerText);
-return el.innerText.endsWith('*')  && el.innerText.length < 200 && el.innerText.length > 2
-})
-// document.querySelectorAll('iframe').forEach( item =>
-//     console.log(item.contentWindow.document.body.querySelectorAll('label'))
-// )
-return ar;
-};
-
-setTimeout(()=>{
-	console.log("searching labels");
-	 const ar = searchLabels(document);
-
- console.log(ar);
-}, 5000);
-
-});
 
 
 };
